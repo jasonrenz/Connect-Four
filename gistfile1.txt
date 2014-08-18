@@ -1,0 +1,370 @@
+/*
+Title: CONNECT FOUR
+Authors: Louis Adrian V. dela Rosa, Jason Renz C. Reyes
+Brief Description: This program is a game called Connect 4. It requires 2 human players. The main objective of each player is to create a line of 4 symbols assigned per player.
+Learnings: We have learned better the function and use of arrays - 2 Dimensional Arrays in particular. 
+We also started learning to use the headers windows.h and iostream.h
+We also learned to add color to text in c++
+*/
+#include<stdio.h>
+#include<stdlib.h>
+#include<windows.h>
+#include<iostream.h>
+
+using namespace std;
+
+char place[6][7];//2 dimensional array to set chip
+void board();//the display for the board
+void splash();// Displays Intro - Animation
+int drop(int b, char chip);//function to call when a player chooses a column. This also sets to what column the chip should be dropped.
+int check(int a,int b);//checks for winning player
+
+int main()
+{
+
+splash();
+system("cls");
+
+for(int a =0;a <= 5; a++)//initializes the array to blank spaces' '. 
+{		
+	for(int b = 0; b<=6; b++)	
+	place[a][b] = ' ';	
+}
+
+char chip = 4;//chip is responsible for the distinguishing the turning of players. It is initialized to 4 so that it will set chip as player 2. 
+int max = 0, input, container = 0;//max for checking draw. input for the player's chosen column. container checks for errors committed by user.
+int game = 0;
+char again;//checks user's input if Y or N, if to start new game or quit.
+
+
+board();//calls to display board
+
+while(!game)//loops as long as game continues
+{
+
+if (container != -1)//if no error detected
+{
+	if (chip == 4)//if player is from player 2
+	{
+		chip = 3;// change to player 1
+		system("COLOR 0C");//color of player 1
+		printf("Player 1 [%c].\nWhere would you drop your piece? ", chip);//asks for player one's input
+	}
+
+	else//if player is from player 1
+	{
+		chip = 4;//change to player 2
+			system("COLOR 0A");
+		printf("Player 2 [%c].\nWhere would you drop your piece? ", chip);//asks for player two's input
+	}
+}
+
+		while(1)//loops as long as return value for 1.
+		{
+			if (max == 42)//checks if gameboard is full. 7*6=42
+			break;
+	
+		cin>>input;//scans input and addresses to variable input
+		input--;//because arraysstart at 0, not 1
+	
+		if (input<=6 && input>=0)//if input has values within the range of available columns, break the loop! 
+		break;
+	    
+		else 
+		printf("\nPlease input valid column number.");
+		
+		if (cin.fail()) //	if value inputted is not an integer or if a character
+			{					
+				cin.clear();//clears the input		
+				char c;		//creates character variable c
+				cin>>c;		// places the invalid input/character in variable c.
+			}
+		}//endwhile 1
+
+if (max == 42)// break if board game is full
+break;
+
+container = drop(input,chip);//calls drop for checking errors. drop puts value to array
+
+if (container == -1)// checks if return value for container is -1 or when column is full.
+{
+printf("Column is full. Please enter unoccupied columns.\n");
+}
+else
+{
+game = check(container, input); //(FOR CHECKING 1. for succesful input. 2.if there is already a winner) 
+max++;//incrementation for number of chips detected/checking for draw
+system("cls");//clears the screen
+board();//reprints the board game
+
+}
+
+} //endwhile game
+
+if (max == 42)//checks if gameboard is full
+{
+printf("Draw.\n\n");
+
+for(int l=0; l<4; l++)
+{
+
+system("color 07");
+Sleep ( 50 );
+system("color 0F");
+Sleep ( 50 );
+}
+
+getchar();
+system("pause");
+}
+
+else if (chip == 3)//if winner is player 1.
+{
+printf("Player 1 wins!!!\n");
+//colors winning for player 1
+for(int l=0; l<4; l++)
+{
+system("color 04");
+Sleep ( 50 );
+system("color 07");
+Sleep ( 50 );
+system("color 0C");
+Sleep ( 50 );
+system("color 0F");
+Sleep ( 50 );
+}
+system("color 0C");
+
+getchar();
+system("pause");
+
+
+
+}
+
+else if (chip == 4)
+{
+printf("Player 2 wins!!!\n");//if winner is player 2.
+//colors winning for player 2
+for(int l=0; l<8; l++)
+{
+system("color 02");
+Sleep ( 100 );
+system("color 07");
+Sleep ( 100 );
+system("color 0A");
+Sleep ( 100 );
+system("color 0F");
+Sleep ( 100 );
+}
+system("color 0A");
+
+getchar();
+system("pause");
+}
+
+
+//then asks if wanna play again or not
+while(again!='n')//loops until again == 'n'
+{
+
+printf("\nPlay again? Yes [Y] or No [N]? ");
+scanf("%c" ,&again);
+
+
+if (again == 'y' || again == 'Y')
+{
+system("cls");
+main();
+}		
+
+else if(again == 'n' || again == 'N')
+{
+	printf("\nThe game will now exit.\n\n");
+	getchar();
+	system("pause");
+	break;
+	
+}
+
+else 
+{
+	printf("\nPlease enter [Y] or [N]\n");
+}
+getchar();
+}
+
+}
+	
+void board()//responsible for printing the board
+{	
+printf("\t\t==========CONNECT FOUR==========\n");
+	printf("\t\t%c",218);
+	for(int b=0; b<=6; b++)
+	{
+		printf("%c%c%c%c",196,196,196,196);
+	}
+	printf("%c%c\n",196,191);	
+	
+	for(int a=0; a<=5; a++)
+{
+	
+	printf("\t\t%c ",179);
+	for(int b=0; b<=6; b++)
+	{
+		printf("%c%c%c ",218,196,191);
+	}
+	printf("%c\n",179);
+	
+	printf("\t\t%c ",179);
+	for(int b=0; b<=6; b++)
+	{
+		printf("%c%c%c ",179,place[a][b],179);//array place[a][b] for printing the chip corresponding with input
+	}
+	printf("%c\n",179);
+	
+	printf("\t\t%c ",179);
+	for(int b=0; b<=6; b++)
+	{
+		printf("%c%c%c ",192,196,217);
+	}
+	printf("%c\n",179);
+}
+printf("\t\t%c  1   2   3   4   5   6   7  %c\n", 179,179);
+
+printf("\t\t%c",192);
+	for(int b=0; b<=6; b++)
+	{
+		printf("%c%c%c%c",196,196,196,196);
+	}
+printf("%c%c\n",196,217);	
+
+}
+
+int drop(int b, char chip)//function to call when a player chooses a column, it sets to which column the chip should be dropped.
+{
+	if(b >=0 && b<= 6)
+	{
+		if(place[0][b] == ' ')
+		{
+			int i;
+			for(i = 0;place[i][b] == ' ';i++)
+			{
+				if(i == 5)
+				{
+				place[i][b] = chip;
+				return i;
+				}
+			}
+			i--;
+			place[i][b] = chip;
+			return i;
+
+		}
+	else
+	return -1;
+
+	}
+else
+return -1;
+
+}
+
+int check(int a,int b)//responisble for checking
+{
+	int vert = 1;//(|)
+	int horz = 1;//(-)
+	int diag1 = 1;//(\)
+	int diag2 = 1;//(/)
+	char chip = place[a][b];
+	int i;//vertical
+	int j;//horizontal
+	
+	//check for vertical(|)
+	for(i = a+1; place[i][b] == chip && i<=5; i++, vert++); //Check down
+	for(i = a-1; place[i][b] == chip && i>=0; i--, vert++); //Check up
+
+	//check for horizontal(-)
+	for(j = b-1; place[a][j] == chip && j>=0;j--, horz++); //Check left
+	for(j = b+1; place[a][j] == chip && j<=6;j++, horz++); //Check right
+	
+	//check for diagonal 1 (\)
+	for(i = a-1, j = b-1; place[i][j] == chip && i>=0 && j>=0; diag1 ++, i --, j --);//up and left
+	for(i = a+1, j = b+1; place[i][j] == chip && i<=5 && j<=6; diag1 ++, i ++, j ++);//down and right
+	
+	//check for diagonal 2(/)
+	for(i = a-1, j = b+1; place[i][j] == chip && i>=0 && j<=6; diag2 ++, i --, j ++);//up and right
+	for(i = a+1, j = b-1; place[i][j] == chip && i<=5 && j>=0; diag2 ++, i ++, j --);//up and left
+	
+	if(vert >= 4 || horz >= 4 || diag1 >= 4 || diag2 >= 4)
+	{
+		return 1;
+	}
+	
+	else
+	{
+		return 0;
+	}
+	
+	
+}
+
+void splash()
+{
+	printf("\n");
+	printf("\tProgrammed by:\n\t\tJason Renz C. Reyes\n\t\tLouis Adrian V. dela Rosa\n\n");
+	printf("\t     CCCCCCCC                                      t\n");
+	printf("\t    CC     CCC                       eeee          tt\n");
+	printf("\t   CC       CC  oooo  nn nn  nn nn  ee  ee   cccc tttt   \n");
+	printf("\t  CC       C   oo  oo nnn nn nnn nn ee ee   cc     tt\n");
+	printf("\t  CC           oo  oo nn  nn nn  nn eee   e cc     tt t\n");
+	printf("\t  CC            oooo  nn  nn nn  nn  eeeee   cccc   tt  \n ");
+	printf("\t  CC      C                                              \n");
+	printf("\t   CC     CCC           FFFFFFFFFFFF\n");
+	printf("\t    CCC    CC            FFFFFFFFF  \n");
+	printf("\t     CCCC   CC            FFF          \n");
+	printf("\t      CCCCCCCC           FFF  eF       \n");
+	printf("\t        CCCCC           FFFFFFF                    rrrr rrr        \n");
+	printf("\t                       FFF   ^F   ooooo   uu  uuu   rrrr  rr     \n");
+	printf("\t                      FFF       ooo  ooo uu  uuu   rrr         \n");
+	printf("\t                     FFF       ooo   oo uu  uuu   rrr              \n");
+	printf("\t                    FFF         ooooo   uuuuu uu rrrr\n");
+
+system("color 07");
+Sleep ( 50 );
+system("color 0f");
+Sleep ( 50 );
+system("color 04");
+Sleep ( 50 );
+system("color 0c");
+Sleep ( 50 );
+system("color 06");
+Sleep ( 50 );
+system("color 0e");
+Sleep ( 50 );
+system("color 02");
+Sleep ( 50 );
+system("color 0a");
+Sleep ( 50 );
+system("color 0b");
+Sleep ( 50 );
+system("color 03");
+Sleep ( 50 );
+system("color 09");
+Sleep ( 50 );
+system("color 01");
+Sleep ( 50 );
+system("color 05");
+Sleep ( 50 );
+system("color 0d");
+Sleep ( 50 );
+system("color 07");
+Sleep ( 50 );
+system("color 0f");
+Sleep ( 50 );
+printf("\n\t\t\t");
+system("pause");
+
+	
+	
+}
